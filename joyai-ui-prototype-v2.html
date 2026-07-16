@@ -518,6 +518,32 @@ body {
 .stream-video-placeholder.result:hover { background: transparent; }
 .stream-edit-input { flex-shrink: 0; }
 
+/* ============ Version Switch ============ */
+.version-switch {
+  position: fixed; bottom: 24px; right: 24px; z-index: 200;
+  display: flex; align-items: center; gap: 0;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,0,0,0.08);
+  font-size: 13px; font-weight: 500;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+  padding: 3px;
+}
+.vs-btn {
+  padding: 7px 18px; border: none; background: transparent;
+  color: rgba(0,0,0,0.4); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: inherit; border-radius: 20px;
+  transition: all 0.2s;
+}
+.vs-btn:hover { color: rgba(0,0,0,0.7); }
+.vs-btn.active {
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+}
+
 @media (max-width: 900px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } .dashboard-hero h1 { font-size: 28px; } .hero-deco-3d { display: none; } }
 @media (max-width: 768px) { .sidebar { display: none; } }
 </style>
@@ -1089,6 +1115,12 @@ body {
   </div>
 </main>
 
+<!-- Version Switch -->
+<div class="version-switch">
+  <button class="vs-btn active">A</button>
+  <button class="vs-btn" onclick="switchToV3()">B</button>
+</div>
+
 <script>
 // ============ Data ============
 const domainLabels = { text: '文字', vision: '视觉', create: '创作', voice: '语音' };
@@ -1349,6 +1381,31 @@ if (paramDomain && domainConfig[paramDomain]) {
 }
 
 // Splash intro removed - direct entry
+
+// Switch to V3 with current state
+function switchToV3() {
+  let url = 'joyai-ui-prototype-v3.html';
+  const domainMap = { echo: 'visual', world: 'visual' };
+  const tabMap = { echo: 'visual-long', world: 'visual-world' };
+  let domain = currentDomain;
+  let tab = null;
+
+  if (domain && domain !== 'home') {
+    if (domainMap[domain]) {
+      tab = tabMap[domain];
+      domain = domainMap[domain];
+    } else {
+      const activeTab = document.querySelector('.workspace-tab.active');
+      if (activeTab) {
+        const match = (activeTab.getAttribute('onclick') || '').match(/switchTab\(this,'([^']+)'\)/);
+        if (match) tab = match[1];
+      }
+    }
+    url += '?domain=' + domain;
+    if (tab) url += '&tab=' + tab;
+  }
+  window.location.href = url;
+}
 </script>
 </body>
 </html>

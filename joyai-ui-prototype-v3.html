@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JoyAI - AI 能力平台 v3</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --sidebar-width: 180px;
+  --header-height: 56px;
+  --bg: #ffffff;
+  --sidebar-bg: #f7f7f8;
+  --card-bg: #ffffff;
+  --card-border: #e8e8ec;
+  --text: #1a1a2e;
+  --text-secondary: #6b6b80;
+  --text-tertiary: #9b9bb0;
+  --accent-blue: #2563eb;
+  --accent-purple: #7c3aed;
+  --accent-green: #059669;
+  --accent-orange: #d97706;
+  --accent-pink: #db2777;
+  --hover-bg: #ededf0;
+  --active-bg: #e0e0e6;
+  --divider: #e8e8ec;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ============ Top Header ============ */
+.top-header {
+  height: var(--header-height);
+  min-height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--divider);
+  background: var(--bg);
+  z-index: 100;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.header-logo img {
+  height: 28px;
+  width: auto;
+}
+
+.header-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #f0f0f3;
+  border-radius: 999px;
+  padding: 4px;
+  position: relative;
+}
+
+.header-tab {
+  padding: 7px 18px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family: inherit;
+  user-select: none;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+}
+.header-tab:hover:not(.active) {
+  color: var(--text);
+}
+.header-tab.active {
+  color: #fff;
+}
+
+.header-tab-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  height: calc(100% - 8px);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+  z-index: 1;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.header-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #dde, #ccd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ============ Main Layout ============ */
+.main-layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ============ Sidebar ============ */
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--divider);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sidebar-section {
+  padding: 16px 12px 8px;
+}
+
+.sidebar-sub-section {
+  padding: 16px 12px 8px;
+  min-height: 180px;
+}
+
+.sidebar-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  padding: 4px 10px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px;
+}
+
+.sub-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.12s;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  user-select: none;
+}
+.sub-nav-item:hover { background: var(--hover-bg); color: var(--text); }
+.sub-nav-item.active { background: var(--active-bg); color: var(--text); font-weight: 600; }
+
+.sub-nav-item .nav-indicator {
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background 0.12s;
+  margin-left: auto;
+}
+.sub-nav-item.active .nav-indicator { background: var(--accent-blue); }
+
+.nav-divider { height: 1px; background: var(--divider); margin: 12px 8px; }
+
+.history-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 8px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.12s;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  user-select: none;
+}
+.history-item:hover { background: var(--hover-bg); color: var(--text-secondary); }
+
+.history-item .domain-tag {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 500;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.domain-tag.tag-text { background: #eff6ff; color: var(--accent-blue); }
+.domain-tag.tag-vision { background: #f5f3ff; color: var(--accent-purple); }
+.domain-tag.tag-create { background: #fffbeb; color: var(--accent-orange); }
+.domain-tag.tag-voice { background: #ecfdf5; color: var(--accent-green); }
+
+/* ============ Workspace ============ */
+.workspace { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.workspace-header {
+  padding: 14px 32px 0;
+  border-bottom: 1px solid var(--divider);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.workspace-header.no-tabs { padding-bottom: 14px; }
+.workspace-header.no-tabs .workspace-tabs { display: none; }
+
+.workspace-title { font-size: 15px; font-weight: 700; color: var(--text); }
+
+.new-chat-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 7px; border: 1px solid var(--card-border);
+  background: #fff; font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.12s; font-family: inherit;
+}
+.new-chat-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: #f8faff; }
+
+.workspace-tabs { display: flex; gap: 0; }
+.workspace-tab {
+  padding: 8px 18px 12px; font-size: 13px; font-weight: 500;
+  color: var(--text-tertiary); cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all 0.15s; user-select: none;
+}
+.workspace-tab:hover { color: var(--text-secondary); }
+.workspace-tab.active { color: var(--text); font-weight: 600; border-bottom-color: var(--accent-blue); }
+
+.workspace-content { flex: 1; overflow-y: auto; overflow-x: hidden; }
+
+/* ============ Pages ============ */
+.ws-page { display: none; height: 100%; }
+.ws-page.active { display: flex; flex-direction: column; }
+
+/* ============ Dashboard ============ */
+.dashboard { padding: 40px 48px 48px; max-width: 1100px; margin: 0 auto; width: 100%; overflow-y: auto; height: 100%; }
+
+.dashboard-hero {
+  position: relative; margin-bottom: 32px; min-height: 180px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.dashboard-hero h1 { font-size: 38px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+.dashboard-hero h1 .accent { background: linear-gradient(135deg, #7c3aed, #2563eb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.dashboard-hero p { font-size: 16px; color: var(--text-secondary); }
+
+.home-input-wrap {
+  background: rgba(245,243,255,0.5); border: 1px solid #e8e5f0;
+  border-radius: 18px; padding: 22px 26px; margin-bottom: 40px;
+  backdrop-filter: blur(4px);
+}
+.home-input-box {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px; background: #fff; border: 1px solid #e8e8ec;
+  border-radius: 14px; margin-bottom: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.home-input-box input {
+  flex: 1; border: none; outline: none; font-size: 14px; font-family: inherit;
+  color: var(--text); background: transparent;
+}
+.home-input-box input::placeholder { color: #b0b0c0; }
+.home-input-box .send-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: none;
+  background: var(--accent-blue); color: #fff; font-size: 16px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+}
+.home-input-box .send-btn:hover { background: #1d4ed8; transform: scale(1.05); }
+.home-input-toolbar { display: flex; align-items: center; gap: 10px; }
+
+.home-model-select {
+  position: relative; display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 10px; border: 1px solid #e8e8ec;
+  background: #fff; font-size: 13px; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.15s; user-select: none;
+}
+.home-model-select:hover, .home-model-select.open { border-color: var(--accent-blue); color: var(--accent-blue); }
+.hms-icon { font-size: 14px; }
+.hms-label { font-weight: 500; }
+.hms-chevron { font-size: 10px; transition: transform 0.2s; }
+.home-model-select.open .hms-chevron { transform: rotate(180deg); }
+.hms-dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0;
+  background: #fff; border: 1px solid #e8e8ec; border-radius: 12px;
+  padding: 6px; min-width: 180px; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  display: none; z-index: 100;
+}
+.home-model-select.open .hms-dropdown { display: block; }
+.hms-option {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-radius: 8px; font-size: 13px;
+  color: var(--text); cursor: pointer; transition: background 0.1s;
+}
+.hms-option:hover { background: #eff6ff; }
+.hms-option.active { background: #dbeafe; color: var(--accent-blue); font-weight: 600; }
+
+.section-header {
+  margin-bottom: 24px; font-size: 20px; font-weight: 700; color: var(--text);
+}
+
+.dashboard-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.cap-card {
+  background: linear-gradient(160deg, rgba(255,255,255,0.97), rgba(248,246,255,0.92));
+  border: 1px solid rgba(139,92,246,0.08);
+  border-radius: 20px; padding: 28px 22px; cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+  position: relative; overflow: hidden;
+}
+.cap-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(124,58,237,0.1); border-color: rgba(139,92,246,0.2); }
+.cap-card .cap-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255,255,255,0.7);
+}
+.cap-card.card-live .cap-icon { background: linear-gradient(135deg, #ede9fe, #e0e7ff); }
+.cap-card.card-echo .cap-icon { background: linear-gradient(135deg, #dbeafe, #e0f2fe); }
+.cap-card.card-world .cap-icon { background: linear-gradient(135deg, #fce7f3, #fde6e6); }
+.cap-card.card-sim .cap-icon { background: linear-gradient(135deg, #ecfdf5, #d1fae5); }
+.cap-card .cap-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+.cap-card .cap-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+.cap-card .cap-link { font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+.cap-card.card-live .cap-link { color: #7c3aed; }
+.cap-card.card-echo .cap-link { color: #2563eb; }
+.cap-card.card-world .cap-link { color: #db2777; }
+.cap-card.card-sim .cap-link { color: #059669; }
+
+/* ============ Chat ============ */
+.chat-page { display: flex; flex-direction: column; height: 100%; }
+.chat-history { flex: 1; overflow-y: auto; padding: 24px 40px; max-width: 780px; margin: 0 auto; width: 100%; }
+.chat-welcome { text-align: center; padding: 48px 0 24px; }
+.chat-welcome h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.chat-welcome p { font-size: 14px; color: var(--text-secondary); max-width: 420px; margin: 0 auto; line-height: 1.6; }
+
+.chat-suggestions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 24px; max-width: 540px; margin-left: auto; margin-right: auto; }
+.chat-suggestion { background: var(--bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all 0.12s; text-align: left; line-height: 1.4; }
+.chat-suggestion:hover { border-color: var(--accent-blue); color: var(--text); background: #f0f4ff; }
+
+.chat-msg { margin-bottom: 20px; display: flex; gap: 12px; }
+.chat-msg.user { justify-content: flex-end; }
+.chat-msg .msg-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+.chat-msg.user .msg-avatar { background: #e0e7ff; color: var(--accent-blue); }
+.chat-msg.assistant .msg-avatar { background: #f0f0f4; color: var(--text-secondary); }
+.chat-msg .msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+.chat-msg.user .msg-bubble { background: var(--accent-blue); color: #fff; border-bottom-right-radius: 4px; }
+.chat-msg.assistant .msg-bubble { background: #f5f5f8; color: var(--text); border-bottom-left-radius: 4px; }
+
+.chat-input-area { padding: 14px 40px 24px; max-width: 780px; margin: 0 auto; width: 100%; }
+.chat-input-box { background: var(--bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; transition: border-color 0.15s; box-shadow: var(--shadow-sm); }
+.chat-input-box:focus-within { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.08); }
+.chat-input-box input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 14px; font-family: inherit; line-height: 1.5; }
+.chat-input-box input::placeholder { color: var(--text-tertiary); }
+
+.chat-input-actions { display: flex; align-items: center; gap: 4px; }
+.input-btn { width: 34px; height: 34px; border-radius: 8px; border: none; background: transparent; color: var(--text-tertiary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; transition: all 0.12s; }
+.input-btn:hover { background: var(--hover-bg); color: var(--text-secondary); }
+.input-btn.send { background: var(--accent-blue); color: #fff; font-size: 14px; font-weight: 600; }
+.input-btn.send:hover { background: #1d4ed8; }
+.input-btn.upload { width: auto; padding: 0 10px; gap: 4px; font-size: 12px; border: 1px dashed var(--card-border); border-radius: 6px; color: var(--text-tertiary); display: flex; align-items: center; }
+.input-btn.upload:hover { border-color: var(--accent-orange); color: var(--accent-orange); background: #fffbf0; }
+
+.chat-toolbar { display: flex; align-items: center; gap: 6px; padding: 8px 0 0; flex-wrap: wrap; }
+.toolbar-select { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; border: 1px solid var(--card-border); background: #fff; font-size: 12px; color: var(--text-secondary); cursor: pointer; transition: all 0.12s; user-select: none; white-space: nowrap; }
+.toolbar-select:hover { border-color: var(--accent-blue); color: var(--text); background: #f8faff; }
+.toolbar-select .tb-label { font-weight: 500; color: var(--text); }
+.toolbar-select .tb-chevron { font-size: 8px; color: var(--text-tertiary); margin-left: 2px; }
+.model-dropdown { position: relative; }
+.model-menu {
+  display: none; position: absolute; bottom: calc(100% + 6px); left: 0;
+  background: #fff; border: 1px solid var(--card-border); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1); min-width: 220px; padding: 4px; z-index: 50;
+}
+.model-menu.show { display: block; }
+.model-option {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border-radius: 7px; cursor: pointer; transition: background 0.1s;
+}
+.model-option:hover { background: #f0f5ff; }
+.model-option.active { background: rgba(90,174,255,0.08); }
+.model-option .mo-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.model-option .mo-desc { font-size: 11px; color: var(--text-tertiary); }
+.toolbar-divider { width: 1px; height: 18px; background: var(--divider); margin: 0 4px; }
+.toolbar-btn { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; border: 1px solid var(--card-border); background: #fff; font-size: 12px; color: var(--text-secondary); cursor: pointer; transition: all 0.12s; white-space: nowrap; }
+.toolbar-btn:hover { border-color: var(--accent-blue); color: var(--text); background: #f8faff; }
+.toolbar-btn.active { border-color: var(--accent-blue); background: #eff6ff; color: var(--accent-blue); }
+
+/* ============ Live Vision ============ */
+.live-page { display: flex; height: 100%; }
+.live-video-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fafafa; }
+.live-video-placeholder { width: 80%; max-width: 600px; aspect-ratio: 16/9; background: #fff; border: 2px dashed var(--card-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--text-tertiary); font-size: 14px; }
+.live-controls { display: flex; gap: 10px; margin-top: 20px; }
+.live-btn { padding: 9px 18px; border-radius: 8px; border: 1px solid var(--card-border); background: #fff; color: var(--text); cursor: pointer; font-size: 13px; font-family: inherit; display: flex; align-items: center; gap: 6px; transition: all 0.12s; }
+.live-btn:hover { border-color: var(--accent-purple); background: #faf5ff; }
+.live-btn.primary { background: var(--accent-purple); border-color: var(--accent-purple); color: #fff; }
+.live-btn.primary:hover { background: #6d28d9; }
+.live-output { width: 340px; border-left: 1px solid var(--divider); display: flex; flex-direction: column; background: var(--sidebar-bg); }
+.live-output-header { padding: 16px 20px; border-bottom: 1px solid var(--divider); font-size: 14px; font-weight: 600; }
+.live-output-content { flex: 1; padding: 16px 20px; overflow-y: auto; }
+.live-output-item { padding: 12px 0; border-bottom: 1px solid var(--divider); }
+.live-output-item .time { font-size: 11px; color: var(--text-tertiary); margin-bottom: 4px; }
+.live-output-item .content { font-size: 13px; line-height: 1.5; }
+.live-output-input { padding: 16px 20px; border-top: 1px solid var(--divider); }
+.live-output-input input { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--card-border); background: #fff; color: var(--text); font-size: 13px; font-family: inherit; outline: none; }
+.live-output-input input:focus { border-color: var(--accent-purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.08); }
+
+/* ============ Echo Studio ============ */
+.studio-page { display: flex; height: 100%; }
+.studio-chat { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--divider); }
+.studio-chat-content { flex: 1; padding: 32px 24px; overflow-y: auto; }
+.studio-panel { width: 360px; display: flex; flex-direction: column; background: var(--sidebar-bg); }
+.studio-panel-header { padding: 16px 20px; border-bottom: 1px solid var(--divider); font-size: 14px; font-weight: 600; }
+.studio-panel-content { flex: 1; padding: 20px; overflow-y: auto; }
+.workflow-steps { display: flex; flex-direction: column; }
+.workflow-step { display: flex; gap: 14px; padding: 16px 0; position: relative; }
+.workflow-step:not(:last-child)::after { content: ''; position: absolute; left: 15px; top: 48px; bottom: 0; width: 1px; background: var(--divider); }
+.step-indicator { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--divider); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--text-tertiary); flex-shrink: 0; background: var(--sidebar-bg); z-index: 1; }
+.workflow-step.current .step-indicator { border-color: var(--accent-blue); color: var(--accent-blue); background: #eff6ff; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+.step-content h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.step-content p { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+/* ============ Voice ============ */
+.voice-landing { padding: 48px 40px; max-width: 800px; margin: 0 auto; width: 100%; }
+.voice-landing h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+.voice-landing .subtitle { font-size: 14px; color: var(--text-secondary); margin-bottom: 32px; }
+.voice-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.voice-card { background: #fff; border: 1px solid var(--card-border); border-radius: 12px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.15s; }
+.voice-card:hover { border-color: var(--accent-green); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.voice-card .vc-icon { width: 48px; height: 48px; border-radius: 12px; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: #ecfdf5; }
+.voice-card .vc-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.voice-card .vc-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+.voice-page { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 28px; padding: 40px; }
+.voice-avatar { width: 100px; height: 100px; border-radius: 50%; background: #ecfdf5; border: 2px solid rgba(5,150,105,0.2); display: flex; align-items: center; justify-content: center; font-size: 32px; position: relative; }
+.voice-avatar .pulse { position: absolute; inset: -8px; border-radius: 50%; border: 2px solid rgba(5,150,105,0.15); animation: voicePulse 2s infinite; }
+@keyframes voicePulse { 0% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.08); opacity: 0.15; } 100% { transform: scale(1); opacity: 0.6; } }
+.voice-status { text-align: center; }
+.voice-status h3 { font-size: 17px; font-weight: 600; margin-bottom: 5px; }
+.voice-status p { font-size: 14px; color: var(--text-secondary); }
+.voice-btn { width: 56px; height: 56px; border-radius: 50%; border: none; background: var(--accent-green); color: #fff; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; box-shadow: 0 4px 20px rgba(5,150,105,0.25); }
+.voice-btn:hover { transform: scale(1.06); box-shadow: 0 6px 28px rgba(5,150,105,0.35); }
+
+.tool-page { padding: 36px 40px; max-width: 780px; margin: 0 auto; width: 100%; overflow-y: auto; height: 100%; }
+.tool-page h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.tool-page .subtitle { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
+.tool-page .section-label { font-size: 12px; font-weight: 600; color: var(--text-tertiary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.3px; }
+.voice-clone-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.voice-sample-card { background: #fff; border: 1px solid var(--card-border); border-radius: 10px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.12s; }
+.voice-sample-card:hover { border-color: var(--accent-green); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.voice-sample-card .sample-name { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.voice-sample-card .sample-desc { font-size: 11px; color: var(--text-tertiary); }
+.upload-area { background: #fff; border: 2px dashed var(--card-border); border-radius: 12px; padding: 32px; text-align: center; cursor: pointer; transition: all 0.12s; }
+.upload-area:hover { border-color: var(--accent-green); background: #f0fdf4; }
+.upload-area p { font-size: 13px; color: var(--text-secondary); }
+.upload-area .hint { font-size: 11px; margin-top: 4px; color: var(--text-tertiary); }
+.generate-voice-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 24px; border-radius: 8px; border: none; background: var(--accent-green); color: #fff; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.15s; box-shadow: 0 3px 12px rgba(5,150,105,0.2); margin-top: 20px; }
+.generate-voice-btn:hover { background: #047857; transform: translateY(-1px); }
+
+/* ============ Stream Edit ============ */
+.stream-edit-page { display: flex; flex-direction: column; height: 100%; padding: 24px; gap: 20px; }
+.stream-video-panel { display: flex; gap: 20px; flex: 1; min-height: 0; }
+.stream-video-box { flex: 1; display: flex; flex-direction: column; border-radius: 16px; border: 1px solid var(--card-border); background: #fff; overflow: hidden; }
+.stream-video-label { padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--card-border); background: var(--sidebar-bg); }
+.stream-video-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--text-tertiary); font-size: 13px; cursor: pointer; transition: background 0.15s; }
+.stream-video-placeholder:hover { background: rgba(90,174,255,0.03); }
+.stream-edit-input { flex-shrink: 0; }
+
+/* ============ Dub ============ */
+.dub-container { background: #fff; border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; }
+.dub-label { font-size: 13px; color: var(--text-secondary); display: block; margin-bottom: 8px; font-weight: 500; }
+.dub-textarea { width: 100%; height: 100px; background: var(--sidebar-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px; color: var(--text); font-family: inherit; font-size: 13px; resize: vertical; outline: none; line-height: 1.6; }
+.dub-textarea:focus { border-color: var(--accent-blue); }
+.dub-roles { display: flex; gap: 10px; flex-wrap: wrap; }
+.dub-role { background: var(--sidebar-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; flex: 1; min-width: 180px; }
+.dub-role .role-name { font-size: 13px; font-weight: 500; }
+.dub-role .role-voice { font-size: 11px; color: var(--text-tertiary); }
+.dub-role .role-change { margin-left: auto; font-size: 12px; color: var(--accent-blue); cursor: pointer; }
+.dub-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+/* ============ Version Switch ============ */
+.version-switch {
+  position: fixed; bottom: 24px; right: 24px; z-index: 200;
+  display: flex; align-items: center; gap: 0;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,0,0,0.08);
+  font-size: 13px; font-weight: 500;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+  padding: 3px;
+}
+.vs-btn {
+  padding: 7px 18px; border: none; background: transparent;
+  color: rgba(0,0,0,0.4); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: inherit; border-radius: 20px;
+  transition: all 0.2s;
+}
+.vs-btn:hover { color: rgba(0,0,0,0.7); }
+.vs-btn.active {
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 900px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- Top Header -->
+<header class="top-header">
+  <div class="header-logo" onclick="window.location.href='joyai-homepage.html'">
+    <img src="Assets/JoyAI.png" alt="JoyAI">
+  </div>
+  <div class="header-tabs" id="header-tabs">
+    <div class="header-tab-indicator" id="header-indicator"></div>
+  </div>
+  <div class="header-right">
+    <div class="header-avatar">Y</div>
+  </div>
+</header>
+
+<!-- Main Layout -->
+<div class="main-layout">
+  <!-- Sidebar (sub-categories) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-sub-section">
+      <div class="sidebar-section-label" id="sidebar-title">子分类</div>
+      <div class="sidebar-nav" id="sidebar-nav"></div>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">历史记录</div>
+    </div>
+    <div class="history-section" id="history-list">
+      <div class="history-item" onclick="loadRecent('text','r1')">周报总结助手<span class="domain-tag tag-text">文字</span></div>
+      <div class="history-item" onclick="loadRecent('vision','r2')">竞品 UI 截图分析<span class="domain-tag tag-vision">视觉</span></div>
+      <div class="history-item" onclick="loadRecent('create','r3')">京东 IP 吉祥物<span class="domain-tag tag-create">创作</span></div>
+    </div>
+  </aside>
+
+  <!-- Workspace -->
+  <main class="workspace">
+    <div class="workspace-content" id="ws-content">
+
+      <!-- TEXT -->
+      <div class="ws-page" id="page-text">
+        <div class="chat-page">
+          <div class="chat-history" id="chatarea-text"></div>
+          <div class="chat-input-area">
+            <div class="chat-input-box">
+              <input type="text" placeholder="输入你的问题..." id="input-text" onkeydown="if(event.key==='Enter')sendMsg('text')">
+              <div class="chat-input-actions"><button class="input-btn send" onclick="sendMsg('text')">↑</button></div>
+            </div>
+            <div class="chat-toolbar">
+              <div class="toolbar-select model-dropdown" id="text-model-select" onclick="toggleTextModelMenu()">
+                <span class="tb-label" id="text-model-label">JoyAI-Flash</span>
+                <span class="tb-chevron">▼</span>
+                <div class="model-menu" id="text-model-menu">
+                  <div class="model-option active" data-model="JoyAI-Flash" onclick="selectTextModel(event,'JoyAI-Flash')">
+                    <span class="mo-name">JoyAI-Flash</span><span class="mo-desc">文字对话 / 创作 / 编程</span>
+                  </div>
+                  <div class="model-option" data-model="JoyAI-VL" onclick="selectTextModel(event,'JoyAI-VL')">
+                    <span class="mo-name">JoyAI-VL</span><span class="mo-desc">图片 / 视频 / 文档理解</span>
+                  </div>
+                </div>
+              </div>
+              <div class="toolbar-divider"></div>
+              <div class="toolbar-btn" onclick="this.classList.toggle('active')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+                联网搜索
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISION LIVE -->
+      <div class="ws-page" id="page-vision-live">
+        <div class="live-page">
+          <div class="live-video-area">
+            <div class="live-video-placeholder">
+              <div style="font-size:32px;opacity:0.4;">📹</div>
+              <div>点击下方按钮开启摄像头或输入直播流地址</div>
+            </div>
+            <div class="live-controls">
+              <button class="live-btn primary">开启摄像头</button>
+              <button class="live-btn">输入直播流 URL</button>
+              <button class="live-btn">上传视频文件</button>
+            </div>
+          </div>
+          <div class="live-output">
+            <div class="live-output-header">实时识别结果</div>
+            <div class="live-output-content">
+              <div class="live-output-item">
+                <div class="time">等待视频输入...</div>
+                <div class="content" style="color:var(--text-tertiary)">AI 将实时分析画面并在此输出结果</div>
+              </div>
+            </div>
+            <div class="live-output-input">
+              <input type="text" placeholder="输入分析指令，如「统计画面中的人数」">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUAL INSTANT -->
+      <div class="ws-page" id="page-visual-instant">
+        <div class="chat-page">
+          <div class="chat-history" id="chatarea-visual-instant">
+            <div class="chat-welcome">
+              <h2>即时生成</h2>
+              <p>选择模型，输入描述，即刻生成图片或视频</p>
+              <div class="chat-suggestions">
+                <div class="chat-suggestion">一只穿宇航服的柴犬漂浮在太空中</div>
+                <div class="chat-suggestion">赛博朋克风格的东京街景，霓虹灯光，雨夜</div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <div class="chat-input-box">
+              <input type="text" placeholder="描述你想要生成的内容..." id="input-visual-instant" onkeydown="if(event.key==='Enter')sendMsg('visual-instant')">
+              <div class="chat-input-actions"><button class="input-btn send" onclick="sendMsg('visual-instant')">↑</button></div>
+            </div>
+            <div class="chat-toolbar">
+              <div class="toolbar-select model-dropdown" id="visual-model-select" onclick="toggleVisualModelMenu()">
+                <span class="tb-label" id="visual-model-label">JoyAI-Image</span>
+                <span class="tb-chevron">▼</span>
+                <div class="model-menu" id="visual-model-menu">
+                  <div class="model-option active" data-model="JoyAI-Image" onclick="selectVisualModel(event,'JoyAI-Image')">
+                    <span class="mo-name">JoyAI-Image</span><span class="mo-desc">图片生成</span>
+                  </div>
+                  <div class="model-option" data-model="JoyAI-Image-Edit" onclick="selectVisualModel(event,'JoyAI-Image-Edit')">
+                    <span class="mo-name">JoyAI-Image-Edit</span><span class="mo-desc">图片编辑</span>
+                  </div>
+                  <div class="model-option" data-model="JoyAI-Video" onclick="selectVisualModel(event,'JoyAI-Video')">
+                    <span class="mo-name">JoyAI-Video</span><span class="mo-desc">视频生成</span>
+                  </div>
+                  <div class="model-option" data-model="JoyAI-Video-Edit" onclick="selectVisualModel(event,'JoyAI-Video-Edit')">
+                    <span class="mo-name">JoyAI-Video-Edit</span><span class="mo-desc">视频编辑</span>
+                  </div>
+                </div>
+              </div>
+              <div class="toolbar-select"><span class="tb-label">16:9</span><span class="tb-chevron">▼</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUAL STREAM -->
+      <div class="ws-page" id="page-visual-stream">
+        <div class="stream-edit-page">
+          <div class="stream-video-panel">
+            <div class="stream-video-box">
+              <div class="stream-video-label">原始视频</div>
+              <div class="stream-video-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="color:var(--text-tertiary)"><rect x="2" y="4" width="20" height="16" rx="3"/><polygon points="10,8.5 16,12 10,15.5"/></svg>
+                <span>点击上传或拖拽视频到此处</span>
+              </div>
+            </div>
+            <div class="stream-video-box">
+              <div class="stream-video-label">编辑结果</div>
+              <div class="stream-video-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="color:var(--text-tertiary)"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M12 11v4M10 13h4"/></svg>
+                <span>编辑后的视频将在此处实时预览</span>
+              </div>
+            </div>
+          </div>
+          <div class="stream-edit-input">
+            <div class="chat-input-box">
+              <input type="text" placeholder="描述编辑需求，如「把天空变成星空」...">
+              <div class="chat-input-actions"><button class="input-btn send">↑</button></div>
+            </div>
+            <div class="chat-toolbar">
+              <div class="toolbar-select"><span class="tb-label">JoyAI-Video-Edit</span><span class="tb-chevron">▼</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUAL LONG (Echo Studio) -->
+      <div class="ws-page" id="page-visual-long">
+        <div class="studio-page">
+          <div class="studio-chat">
+            <div class="studio-chat-content">
+              <div class="chat-welcome">
+                <h2>Echo Studio</h2>
+                <p>导演式分镜视频创作：从剧本策划到成片输出</p>
+                <div class="chat-suggestions" style="grid-template-columns:1fr;">
+                  <div class="chat-suggestion">我想制作一个 30 秒的京东 618 促销视频</div>
+                  <div class="chat-suggestion">帮我策划一个产品开箱测评脚本</div>
+                </div>
+              </div>
+            </div>
+            <div class="chat-input-area">
+              <div class="chat-input-box">
+                <input type="text" placeholder="描述你的视频创作需求...">
+                <div class="chat-input-actions"><button class="input-btn send">↑</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="studio-panel">
+            <div class="studio-panel-header">创作流程</div>
+            <div class="studio-panel-content">
+              <div class="workflow-steps">
+                <div class="workflow-step current"><div class="step-indicator">1</div><div class="step-content"><h4>剧本策划</h4><p>与 AI 讨论创意方向</p></div></div>
+                <div class="workflow-step"><div class="step-indicator">2</div><div class="step-content"><h4>分镜脚本</h4><p>生成详细分镜</p></div></div>
+                <div class="workflow-step"><div class="step-indicator">3</div><div class="step-content"><h4>分镜生成</h4><p>逐个生成画面</p></div></div>
+                <div class="workflow-step"><div class="step-indicator">4</div><div class="step-content"><h4>合成成片</h4><p>合成完整视频</p></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUAL WORLD -->
+      <div class="ws-page" id="page-visual-world">
+        <div class="tool-page" style="text-align:center;padding-top:80px;">
+          <div style="font-size:48px;margin-bottom:16px;">🌐</div>
+          <h2>World Model</h2>
+          <p class="subtitle">实时可交互的开放世界生成引擎</p>
+          <p style="color:var(--text-tertiary);font-size:13px;margin-top:24px;">即将上线，敬请期待</p>
+        </div>
+      </div>
+
+      <!-- SIM -->
+      <div class="ws-page" id="page-sim">
+        <div class="tool-page" style="text-align:center;padding-top:80px;">
+          <div style="font-size:48px;margin-bottom:16px;">⚙️</div>
+          <h2>JoyAI-Sim</h2>
+          <p class="subtitle">物理仿真与数字孪生引擎</p>
+          <p style="color:var(--text-tertiary);font-size:13px;margin-top:24px;">即将上线，敬请期待</p>
+        </div>
+      </div>
+
+      <!-- VOICE TALKER -->
+      <div class="ws-page" id="page-voice-talker">
+        <div class="voice-page">
+          <div class="voice-avatar">🎙<div class="pulse"></div></div>
+          <div class="voice-status"><h3>Talker 语音聊天</h3><p>点击麦克风按钮开始实时语音对话</p></div>
+          <button class="voice-btn">🎤</button>
+        </div>
+      </div>
+
+      <!-- VOICE CLONE -->
+      <div class="ws-page" id="page-voice-clone">
+        <div class="tool-page">
+          <h2>音色创作</h2>
+          <p class="subtitle">上传语音样本，AI 克隆独特音色</p>
+          <div class="section-label">预设音色</div>
+          <div class="voice-clone-grid">
+            <div class="voice-sample-card"><div class="sample-name">商务男声</div><div class="sample-desc">沉稳 · 专业</div></div>
+            <div class="voice-sample-card"><div class="sample-name">温柔女声</div><div class="sample-desc">温暖 · 亲切</div></div>
+            <div class="voice-sample-card"><div class="sample-name">活力播报</div><div class="sample-desc">热情 · 活泼</div></div>
+          </div>
+          <div class="section-label">自定义音色</div>
+          <div class="upload-area">
+            <p>拖拽或点击上传语音样本（mp3 / wav / m4a）</p>
+            <p class="hint">建议上传 10 秒以上的清晰语音片段</p>
+          </div>
+          <button class="generate-voice-btn">生成语音</button>
+        </div>
+      </div>
+
+      <!-- VOICE DUB -->
+      <div class="ws-page" id="page-voice-dub">
+        <div class="tool-page">
+          <h2>AI 配音</h2>
+          <p class="subtitle">输入文本，分配角色，一键生成多角色配音</p>
+          <div class="dub-container">
+            <div style="margin-bottom:20px;">
+              <label class="dub-label">配音文本</label>
+              <textarea class="dub-textarea" placeholder="旁白：在一个阳光明媚的早晨...&#10;角色A：你好，今天天气真不错！&#10;角色B：是啊，要不要一起去散步？"></textarea>
+            </div>
+            <div style="margin-bottom:20px;">
+              <label class="dub-label">角色分配</label>
+              <div class="dub-roles">
+                <div class="dub-role"><div><div class="role-name">旁白</div><div class="role-voice">商务男声</div></div><div class="role-change">更换</div></div>
+                <div class="dub-role"><div><div class="role-name">角色 A</div><div class="role-voice">温柔女声</div></div><div class="role-change">更换</div></div>
+                <div class="dub-role"><div><div class="role-name">角色 B</div><div class="role-voice">活力播报</div></div><div class="role-change">更换</div></div>
+              </div>
+            </div>
+            <div class="dub-actions">
+              <button class="live-btn">试听预览</button>
+              <button class="live-btn primary" style="background:var(--accent-green);border-color:var(--accent-green);">生成配音</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Version Switch -->
+<div class="version-switch">
+  <button class="vs-btn" onclick="switchToV2()">A</button>
+  <button class="vs-btn active">B</button>
+</div>
+
+<script>
+// Domain configuration
+const domains = [
+  { key: 'dialog', label: '对话助手' },
+  { key: 'visual', label: '视觉创作' },
+  { key: 'voice', label: '语音交互' },
+  { key: 'sim', label: '具身仿真' },
+];
+
+const domainSubTabs = {
+  dialog: [
+    { id: 'text', label: '文字助手' },
+    { id: 'vision-live', label: '流式理解' },
+  ],
+  visual: [
+    { id: 'visual-instant', label: '即时生成' },
+    { id: 'visual-stream', label: '流式编辑' },
+    { id: 'visual-long', label: '长视频生成' },
+    { id: 'visual-world', label: '世界模型' },
+  ],
+  voice: [
+    { id: 'voice-talker', label: '语音聊天' },
+    { id: 'voice-clone', label: '音色创作' },
+    { id: 'voice-dub', label: 'AI 配音' },
+  ],
+  sim: [
+    { id: 'sim', label: '仿真引擎' },
+  ],
+};
+
+let currentDomain = null;
+let currentTab = null;
+
+// Build header tabs
+function buildHeaderTabs() {
+  const container = document.getElementById('header-tabs');
+  const indicator = document.getElementById('header-indicator');
+  let html = '';
+  domains.forEach(d => {
+    html += `<div class="header-tab" data-domain="${d.key}" onclick="switchDomain('${d.key}')">${d.label}</div>`;
+  });
+  container.innerHTML = html + '<div class="header-tab-indicator" id="header-indicator"></div>';
+}
+
+function updateHeaderIndicator() {
+  const container = document.getElementById('header-tabs');
+  const activeTab = container.querySelector('.header-tab.active');
+  const indicator = container.querySelector('.header-tab-indicator');
+  if (!activeTab || !indicator) return;
+  const containerRect = container.getBoundingClientRect();
+  const tabRect = activeTab.getBoundingClientRect();
+  indicator.style.left = (tabRect.left - containerRect.left) + 'px';
+  indicator.style.width = tabRect.width + 'px';
+}
+
+// Build sidebar sub-nav
+function buildSidebar(domain, activeTabId) {
+  const sidebarNav = document.getElementById('sidebar-nav');
+  const sidebarTitle = document.getElementById('sidebar-title');
+  const tabs = domainSubTabs[domain] || [];
+
+  const domainLabel = domains.find(d => d.key === domain)?.label || '';
+  sidebarTitle.textContent = domainLabel;
+
+  sidebarNav.innerHTML = tabs.map(t =>
+    `<div class="sub-nav-item${t.id === activeTabId ? ' active' : ''}" data-tab="${t.id}" onclick="switchTab('${t.id}')">${t.label}<span class="nav-indicator"></span></div>`
+  ).join('');
+}
+
+// Switch domain (top tab)
+function switchDomain(domain, targetTab) {
+  currentDomain = domain;
+  const tabs = domainSubTabs[domain] || [];
+  const firstTab = targetTab || (tabs.length > 0 ? tabs[0].id : null);
+  currentTab = firstTab;
+
+  // Update header tabs active state
+  document.querySelectorAll('.header-tab').forEach(t =>
+    t.classList.toggle('active', t.getAttribute('data-domain') === domain)
+  );
+  requestAnimationFrame(updateHeaderIndicator);
+
+  // Update sidebar
+  buildSidebar(domain, firstTab);
+
+  // Show page
+  if (firstTab) {
+    showPage(firstTab);
+  }
+
+  // Render chat if applicable
+  if (firstTab === 'text') renderChat('text');
+}
+
+// Switch sub-tab (sidebar)
+function switchTab(tabId) {
+  currentTab = tabId;
+  document.querySelectorAll('.sub-nav-item').forEach(t =>
+    t.classList.toggle('active', t.getAttribute('data-tab') === tabId)
+  );
+  showPage(tabId);
+  if (tabId === 'text') renderChat('text');
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.ws-page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById('page-' + pageId);
+  if (page) page.classList.add('active');
+}
+
+// Chat logic
+const welcomeMessages = {
+  text: '你好！我是 JoyAI 文字助手。可以帮你创作内容、分析数据、编写代码、翻译文本等。',
+};
+
+let chatConversations = {
+  text: { 'text-default': { name: '周报总结助手', msgs: [
+    { role: 'user', text: '帮我总结一下这周的工作进展，做成周报格式' },
+    { role: 'assistant', text: '好的，请提供你这周的工作内容要点，我帮你整理成周报格式。建议按以下结构：\n\n1. 本周完成\n2. 进行中\n3. 下周计划\n4. 需要协助\n\n请把内容发给我。' },
+  ]}},
+};
+let activeConvId = { text: 'text-default' };
+
+function renderChat(domain) {
+  const area = document.getElementById('chatarea-' + domain);
+  if (!area) return;
+  const convId = activeConvId[domain];
+  const conv = chatConversations[domain]?.[convId];
+  if (!conv || conv.msgs.length === 0) {
+    area.innerHTML = `<div class="chat-welcome"><h2>助手</h2><p>${welcomeMessages[domain] || '开始新对话'}</p></div>`;
+    return;
+  }
+  area.innerHTML = conv.msgs.map(m =>
+    `<div class="chat-msg ${m.role}"><div class="msg-avatar">${m.role==='user'?'你':'AI'}</div><div class="msg-bubble">${m.text}</div></div>`
+  ).join('');
+  area.scrollTop = area.scrollHeight;
+}
+
+function sendMsg(domain) {
+  const input = document.getElementById('input-' + domain);
+  if (!input || !input.value.trim()) return;
+  const convId = activeConvId[domain];
+  if (!chatConversations[domain]) chatConversations[domain] = {};
+  if (!chatConversations[domain][convId]) {
+    chatConversations[domain][convId] = { name: input.value.trim().slice(0, 12) + '...', msgs: [] };
+  }
+  chatConversations[domain][convId].msgs.push({ role: 'user', text: input.value.trim() });
+  chatConversations[domain][convId].msgs.push({ role: 'assistant', text: '收到，我来处理...' });
+  input.value = '';
+  renderChat(domain);
+}
+
+// Model selectors
+function toggleVisualModelMenu() {
+  document.getElementById('visual-model-menu').classList.toggle('show');
+}
+function selectVisualModel(e, model) {
+  e.stopPropagation();
+  document.getElementById('visual-model-label').textContent = model;
+  document.querySelectorAll('#visual-model-menu .model-option').forEach(o =>
+    o.classList.toggle('active', o.getAttribute('data-model') === model)
+  );
+  document.getElementById('visual-model-menu').classList.remove('show');
+}
+function toggleTextModelMenu() {
+  document.getElementById('text-model-menu').classList.toggle('show');
+}
+function selectTextModel(e, model) {
+  e.stopPropagation();
+  document.getElementById('text-model-label').textContent = model;
+  document.querySelectorAll('#text-model-menu .model-option').forEach(o =>
+    o.classList.toggle('active', o.getAttribute('data-model') === model)
+  );
+  document.getElementById('text-model-menu').classList.remove('show');
+}
+
+document.addEventListener('click', (e) => {
+  const vmenu = document.getElementById('visual-model-menu');
+  if (vmenu && !e.target.closest('#visual-model-select')) vmenu.classList.remove('show');
+  const tmenu = document.getElementById('text-model-menu');
+  if (tmenu && !e.target.closest('#text-model-select')) tmenu.classList.remove('show');
+});
+
+function loadRecent(domain, id) {
+  if (domain === 'text' || domain === 'vision' || domain === 'create') {
+    switchDomain('dialog', 'text');
+  }
+}
+
+// Init
+buildHeaderTabs();
+
+// Check URL params (deep-link from homepage, same as v2)
+const urlParams = new URLSearchParams(window.location.search);
+const paramDomain = urlParams.get('domain');
+const paramTab = urlParams.get('tab');
+const paramModel = urlParams.get('model');
+if (paramDomain && domainSubTabs[paramDomain]) {
+  switchDomain(paramDomain, paramTab || undefined);
+  if (paramModel) {
+    setTimeout(() => {
+      if (paramTab === 'text' || paramDomain === 'dialog') {
+        selectTextModel({stopPropagation:()=>{}}, paramModel);
+      } else {
+        selectVisualModel({stopPropagation:()=>{}}, paramModel);
+      }
+    }, 50);
+  }
+} else {
+  switchDomain('dialog', 'text');
+}
+
+// Switch to V2 with current state
+function switchToV2() {
+  let url = 'joyai-ui-prototype-v2.html';
+  if (currentDomain) {
+    url += '?domain=' + currentDomain;
+    if (currentTab) url += '&tab=' + currentTab;
+  }
+  window.location.href = url;
+}
+</script>
+</body>
+</html>
