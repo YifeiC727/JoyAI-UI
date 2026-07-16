@@ -396,6 +396,21 @@ body {
 .toolbar-select:hover { border-color: var(--accent-blue); color: var(--text); background: #f8faff; }
 .toolbar-select .tb-label { font-weight: 500; color: var(--text); }
 .toolbar-select .tb-chevron { font-size: 8px; color: var(--text-tertiary); margin-left: 2px; }
+.model-dropdown { position: relative; }
+.model-menu {
+  display: none; position: absolute; bottom: calc(100% + 6px); left: 0;
+  background: #fff; border: 1px solid var(--card-border); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1); min-width: 220px; padding: 4px; z-index: 50;
+}
+.model-menu.show { display: block; }
+.model-option {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border-radius: 7px; cursor: pointer; transition: background 0.1s;
+}
+.model-option:hover { background: #f0f5ff; }
+.model-option.active { background: rgba(90,174,255,0.08); }
+.model-option .mo-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.model-option .mo-desc { font-size: 11px; color: var(--text-tertiary); }
 .toolbar-divider { width: 1px; height: 18px; background: var(--divider); margin: 0 4px; }
 .toolbar-btn { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; border: 1px solid var(--card-border); background: #fff; font-size: 12px; color: var(--text-secondary); cursor: pointer; transition: all 0.12s; white-space: nowrap; }
 .toolbar-btn:hover { border-color: var(--accent-blue); color: var(--text); background: #f8faff; }
@@ -492,66 +507,16 @@ body {
 .dub-role .role-change { margin-left: auto; font-size: 12px; color: var(--accent-blue); cursor: pointer; }
 .dub-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 
-/* ============ Splash Intro ============ */
-.splash-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  background: linear-gradient(160deg, #0f0a2e 0%, #1a1145 40%, #2d1b69 100%);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-.splash-overlay.exit {
-  opacity: 0; transform: translateY(-30px);
-  pointer-events: none;
-}
-.splash-logo {
-  width: 72px; height: 72px; border-radius: 20px;
-  background: linear-gradient(135deg, #7c3aed, #4f46e5);
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 0 0 rgba(124,58,237,0.4);
-  animation: splash-pulse 1.5s ease-out 0.3s;
-  margin-bottom: 24px;
-}
-.splash-logo svg { width: 36px; height: 36px; }
-.splash-title {
-  font-size: 28px; font-weight: 700; color: #fff;
-  opacity: 0; animation: splash-fade-up 0.8s ease forwards 0.6s;
-  letter-spacing: -0.5px;
-}
-.splash-tagline {
-  font-size: 14px; color: rgba(255,255,255,0.5);
-  opacity: 0; animation: splash-fade-up 0.8s ease forwards 1.0s;
-  margin-top: 8px;
-}
-.splash-particles {
-  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
-}
-.splash-particle {
-  position: absolute; width: 3px; height: 3px;
-  background: rgba(139,92,246,0.4); border-radius: 50%;
-  animation: splash-drift 4s linear infinite;
-}
-.sp1 { top: 20%; left: 15%; animation-delay: 0s; }
-.sp2 { top: 60%; left: 75%; animation-delay: 1s; }
-.sp3 { top: 40%; left: 50%; animation-delay: 0.5s; animation-duration: 5s; }
-.sp4 { top: 80%; left: 30%; animation-delay: 1.5s; }
-.sp5 { top: 10%; left: 85%; animation-delay: 2s; }
-.sp6 { top: 70%; left: 60%; animation-delay: 0.8s; }
 
-@keyframes splash-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(124,58,237,0.5); transform: scale(0.8); }
-  50% { box-shadow: 0 0 0 30px rgba(124,58,237,0); transform: scale(1.05); }
-  100% { box-shadow: 0 0 0 0 rgba(124,58,237,0); transform: scale(1); }
-}
-@keyframes splash-fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes splash-drift {
-  0% { transform: translateY(0) translateX(0); opacity: 0; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { transform: translateY(-80px) translateX(20px); opacity: 0; }
-}
+.stream-edit-page { display: flex; flex-direction: column; height: 100%; padding: 24px; gap: 20px; }
+.stream-video-panel { display: flex; gap: 20px; flex: 1; min-height: 0; }
+.stream-video-box { flex: 1; display: flex; flex-direction: column; border-radius: 16px; border: 1px solid var(--card-border); background: #fff; overflow: hidden; }
+.stream-video-label { padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--card-border); background: var(--sidebar-bg); }
+.stream-video-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--text-tertiary); font-size: 13px; cursor: pointer; transition: background 0.15s; }
+.stream-video-placeholder:hover { background: rgba(90,174,255,0.03); }
+.stream-video-placeholder.result { cursor: default; }
+.stream-video-placeholder.result:hover { background: transparent; }
+.stream-edit-input { flex-shrink: 0; }
 
 @media (max-width: 900px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } .dashboard-hero h1 { font-size: 28px; } .hero-deco-3d { display: none; } }
 @media (max-width: 768px) { .sidebar { display: none; } }
@@ -559,26 +524,9 @@ body {
 </head>
 <body>
 
-<!-- Splash Intro -->
-<div class="splash-overlay" id="splash">
-  <div class="splash-particles">
-    <div class="splash-particle sp1"></div>
-    <div class="splash-particle sp2"></div>
-    <div class="splash-particle sp3"></div>
-    <div class="splash-particle sp4"></div>
-    <div class="splash-particle sp5"></div>
-    <div class="splash-particle sp6"></div>
-  </div>
-  <div class="splash-logo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-  </div>
-  <div class="splash-title">JoyAI</div>
-  <div class="splash-tagline">探索无限可能</div>
-</div>
-
 <!-- Sidebar -->
 <nav class="sidebar">
-  <div class="sidebar-header" onclick="showDomain('home')">
+  <div class="sidebar-header" onclick="window.location.href='joyai-homepage.html'" style="cursor:pointer">
     <div class="sidebar-logo">
       <div class="logo-icon">J</div>
       <div class="logo-text">JoyAI</div>
@@ -586,21 +534,10 @@ body {
   </div>
 
   <div class="sidebar-nav">
-    <div class="nav-section-label">对话助手</div>
-    <div class="nav-item" data-domain="text" onclick="showDomain('text')">文字助手<span class="nav-indicator"></span></div>
-    <div class="nav-item" data-domain="vision" onclick="showDomain('vision')">流式理解<span class="nav-indicator"></span></div>
-    <div class="nav-divider"></div>
-    <div class="nav-section-label">视觉创作</div>
-    <div class="nav-item" data-domain="image" onclick="showDomain('image')">图片创作<span class="nav-indicator"></span></div>
-    <div class="nav-item" data-domain="video" onclick="showDomain('video')">视频创作<span class="nav-indicator"></span></div>
-    <div class="nav-divider"></div>
-    <div class="nav-section-label">语音交互</div>
-    <div class="nav-item" data-domain="voice" onclick="showDomain('voice')">语音能力<span class="nav-indicator"></span></div>
-    <div class="nav-divider"></div>
-    <div class="nav-section-label">创作工作台</div>
-    <div class="nav-item" data-domain="echo" onclick="showDomain('echo')">Echo Studio<span class="nav-indicator"></span></div>
-    <div class="nav-item" data-domain="world" onclick="showDomain('world')">World Model<span class="nav-indicator"></span></div>
-    <div class="nav-item" data-domain="sim" onclick="showDomain('sim')">JoyAI-Sim<span class="nav-indicator"></span></div>
+    <div class="nav-item" data-domain="dialog" onclick="showDomain('dialog')">对话助手<span class="nav-indicator"></span></div>
+    <div class="nav-item" data-domain="visual" onclick="showDomain('visual')">视觉创作<span class="nav-indicator"></span></div>
+    <div class="nav-item" data-domain="voice" onclick="showDomain('voice')">语音交互<span class="nav-indicator"></span></div>
+    <div class="nav-item" data-domain="sim" onclick="showDomain('sim')">具身仿真<span class="nav-indicator"></span></div>
     <div class="nav-divider"></div>
     <div class="nav-section-label">最近使用</div>
     <div id="recent-list">
@@ -709,7 +646,18 @@ body {
             <div class="chat-input-actions"><button class="input-btn send" onclick="sendMsg('text')">↑</button></div>
           </div>
           <div class="chat-toolbar">
-            <div class="toolbar-select"><span class="tb-label">JoyAI-Flash</span><span class="tb-chevron">▼</span></div>
+            <div class="toolbar-select model-dropdown" id="text-model-select" onclick="toggleTextModelMenu()">
+              <span class="tb-label" id="text-model-label">JoyAI-Flash</span>
+              <span class="tb-chevron">▼</span>
+              <div class="model-menu" id="text-model-menu">
+                <div class="model-option active" data-model="JoyAI-Flash" onclick="selectTextModel(event,'JoyAI-Flash')">
+                  <span class="mo-name">JoyAI-Flash</span><span class="mo-desc">文字对话 / 创作 / 编程</span>
+                </div>
+                <div class="model-option" data-model="JoyAI-VL" onclick="selectTextModel(event,'JoyAI-VL')">
+                  <span class="mo-name">JoyAI-VL</span><span class="mo-desc">图片 / 视频 / 文档理解</span>
+                </div>
+              </div>
+            </div>
             <div class="toolbar-divider"></div>
             <div class="toolbar-btn" onclick="this.classList.toggle('active')">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
@@ -883,6 +831,124 @@ body {
             <div class="toolbar-select"><span class="tb-label">JoyAI-Video Edit</span><span class="tb-chevron">▼</span></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- VISUAL: 即时生成 (unified) -->
+    <div class="ws-page" id="page-visual-instant">
+      <div class="chat-page">
+        <div class="chat-history" id="chatarea-visual-instant">
+          <div class="chat-welcome">
+            <h2>即时生成</h2>
+            <p>选择模型，输入描述，即刻生成图片或视频</p>
+            <div class="chat-suggestions">
+              <div class="chat-suggestion">一只穿宇航服的柴犬漂浮在太空中</div>
+              <div class="chat-suggestion">赛博朋克风格的东京街景，霓虹灯光，雨夜</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <div class="chat-input-box">
+            <input type="text" placeholder="描述你想要生成的内容..." id="input-visual-instant" onkeydown="if(event.key==='Enter')sendMsg('visual-instant')">
+            <div class="chat-input-actions"><button class="input-btn send" onclick="sendMsg('visual-instant')">↑</button></div>
+          </div>
+          <div class="chat-toolbar">
+            <div class="toolbar-select model-dropdown" id="visual-model-select" onclick="toggleVisualModelMenu()">
+              <span class="tb-label" id="visual-model-label">JoyAI-Image</span>
+              <span class="tb-chevron">▼</span>
+              <div class="model-menu" id="visual-model-menu">
+                <div class="model-option active" data-model="JoyAI-Image" onclick="selectVisualModel(event,'JoyAI-Image')">
+                  <span class="mo-name">JoyAI-Image</span><span class="mo-desc">图片生成</span>
+                </div>
+                <div class="model-option" data-model="JoyAI-Image-Edit" onclick="selectVisualModel(event,'JoyAI-Image-Edit')">
+                  <span class="mo-name">JoyAI-Image-Edit</span><span class="mo-desc">图片编辑</span>
+                </div>
+                <div class="model-option" data-model="JoyAI-Video" onclick="selectVisualModel(event,'JoyAI-Video')">
+                  <span class="mo-name">JoyAI-Video</span><span class="mo-desc">视频生成</span>
+                </div>
+                <div class="model-option" data-model="JoyAI-Video-Edit" onclick="selectVisualModel(event,'JoyAI-Video-Edit')">
+                  <span class="mo-name">JoyAI-Video-Edit</span><span class="mo-desc">视频编辑</span>
+                </div>
+              </div>
+            </div>
+            <div class="toolbar-select"><span class="tb-label">16:9</span><span class="tb-chevron">▼</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISUAL: 流式编辑 -->
+    <div class="ws-page" id="page-visual-stream">
+      <div class="stream-edit-page">
+        <div class="stream-video-panel">
+          <div class="stream-video-box">
+            <div class="stream-video-label">原始视频</div>
+            <div class="stream-video-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="color:var(--text-tertiary)"><rect x="2" y="4" width="20" height="16" rx="3"/><polygon points="10,8.5 16,12 10,15.5"/></svg>
+              <span>点击上传或拖拽视频到此处</span>
+            </div>
+          </div>
+          <div class="stream-video-box">
+            <div class="stream-video-label">编辑结果</div>
+            <div class="stream-video-placeholder result">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="color:var(--text-tertiary)"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M12 11v4M10 13h4"/></svg>
+              <span>编辑后的视频将在此处实时预览</span>
+            </div>
+          </div>
+        </div>
+        <div class="stream-edit-input">
+          <div class="chat-input-box">
+            <input type="text" placeholder="描述编辑需求，如「把天空变成星空」...">
+            <div class="chat-input-actions"><button class="input-btn send">↑</button></div>
+          </div>
+          <div class="chat-toolbar">
+            <div class="toolbar-select"><span class="tb-label">JoyAI-Video-Edit</span><span class="tb-chevron">▼</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISUAL: 长视频生成 -->
+    <div class="ws-page" id="page-visual-long">
+      <div class="studio-page">
+        <div class="studio-chat">
+          <div class="studio-chat-content">
+            <div class="chat-welcome">
+              <h2>Echo Studio</h2>
+              <p>导演式分镜视频创作：从剧本策划到成片输出</p>
+              <div class="chat-suggestions" style="grid-template-columns:1fr;">
+                <div class="chat-suggestion">我想制作一个 30 秒的京东 618 促销视频</div>
+                <div class="chat-suggestion">帮我策划一个产品开箱测评脚本</div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <div class="chat-input-box">
+              <input type="text" placeholder="描述你的视频创作需求...">
+              <div class="chat-input-actions"><button class="input-btn send">↑</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="studio-panel">
+          <div class="studio-panel-header">创作流程</div>
+          <div class="studio-panel-content">
+            <div class="workflow-steps">
+              <div class="workflow-step current"><div class="step-indicator">1</div><div class="step-content"><h4>剧本策划</h4><p>与 AI 讨论创意方向，确定主题和风格</p></div></div>
+              <div class="workflow-step"><div class="step-indicator">2</div><div class="step-content"><h4>分镜脚本</h4><p>生成详细分镜，含画面描述和转场</p></div></div>
+              <div class="workflow-step"><div class="step-indicator">3</div><div class="step-content"><h4>分镜生成</h4><p>逐个生成画面，支持调整和重新生成</p></div></div>
+              <div class="workflow-step"><div class="step-indicator">4</div><div class="step-content"><h4>合成成片</h4><p>合成完整视频，添加音乐字幕后导出</p></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISUAL: 世界模型 -->
+    <div class="ws-page" id="page-visual-world">
+      <div class="tool-page" style="text-align:center;padding-top:80px;">
+        <h2>World Model</h2>
+        <p class="subtitle">实时可交互的开放世界生成引擎</p>
+        <p style="color:var(--text-tertiary);font-size:13px;margin-top:24px;">即将上线，敬请期待</p>
       </div>
     </div>
 
@@ -1119,17 +1185,15 @@ function loadRecent(domain, convId) {
 // ============ Navigation ============
 const domainConfig = {
   home:   { title: 'JoyAI 能力平台', tabs: [], page: 'home', hasNewChat: false },
-  text:   { title: '文字助手', tabs: [], page: 'text', hasNewChat: true },
-  vision: { title: '流式理解', tabs: [{id:'vision-image',label:'图片理解'},{id:'vision-video',label:'视频理解'},{id:'vision-doc',label:'文档理解'},{id:'vision-live',label:'实时视觉'}], page: 'vision-image', hasNewChat: true },
-  image:  { title: '图片创作', tabs: [{id:'image-gen',label:'图片生成'},{id:'image-edit',label:'图片编辑'}], page: 'image-gen', hasNewChat: true },
-  video:  { title: '视频创作', tabs: [{id:'video-gen',label:'视频生成'},{id:'video-edit',label:'视频编辑'}], page: 'video-gen', hasNewChat: true },
+  dialog: { title: '对话助手', tabs: [{id:'text',label:'文字助手'},{id:'vision-live',label:'流式理解'}], page: 'text', hasNewChat: true },
+  visual: { title: '视觉创作', tabs: [{id:'visual-instant',label:'即时生成'},{id:'visual-stream',label:'流式编辑'},{id:'visual-long',label:'长视频生成'},{id:'visual-world',label:'世界模型'}], page: 'visual-instant', hasNewChat: true },
   voice:  { title: '语音能力', tabs: [{id:'voice-talker',label:'语音聊天'},{id:'voice-clone',label:'音色创作'},{id:'voice-dub',label:'AI 配音'}], page: 'voice-talker', hasNewChat: false },
   echo:   { title: 'Echo Studio', tabs: [], page: 'echo-studio', hasNewChat: false },
   world:  { title: 'World Model', tabs: [], page: 'world-model', hasNewChat: false },
   sim:    { title: 'JoyAI-Sim', tabs: [], page: 'sim', hasNewChat: false },
 };
 
-function showDomain(domain) {
+function showDomain(domain, targetTab) {
   currentDomain = domain;
   const config = domainConfig[domain];
   document.querySelectorAll('.nav-item[data-domain]').forEach(el =>
@@ -1143,16 +1207,18 @@ function showDomain(domain) {
 
   if (config.tabs.length > 0) {
     header.classList.remove('no-tabs');
-    tabsEl.innerHTML = config.tabs.map((t,i) =>
-      `<div class="workspace-tab${i===0?' active':''}" onclick="switchTab(this,'${t.id}')">${t.label}</div>`
+    const activeTabId = targetTab || config.tabs[0].id;
+    tabsEl.innerHTML = config.tabs.map(t =>
+      `<div class="workspace-tab${t.id===activeTabId?' active':''}" onclick="switchTab(this,'${t.id}')">${t.label}</div>`
     ).join('');
+    showPage(activeTabId);
   } else {
     header.classList.add('no-tabs');
     tabsEl.innerHTML = '';
+    showPage(config.page);
   }
 
-  showPage(config.page);
-  if (['text','vision','create'].includes(domain)) renderChat(domain);
+  if (['dialog','text','vision','create'].includes(domain)) renderChat(domain);
 }
 
 function switchTab(tabEl, pageId) {
@@ -1228,30 +1294,62 @@ function homeSubmit() {
   }
 }
 
+// Visual instant model selector
+function toggleVisualModelMenu() {
+  const menu = document.getElementById('visual-model-menu');
+  menu.classList.toggle('show');
+}
+function selectVisualModel(e, model) {
+  e.stopPropagation();
+  document.getElementById('visual-model-label').textContent = model;
+  document.querySelectorAll('#visual-model-menu .model-option').forEach(o =>
+    o.classList.toggle('active', o.getAttribute('data-model') === model)
+  );
+  document.getElementById('visual-model-menu').classList.remove('show');
+}
+
+// Text/dialog model selector
+function toggleTextModelMenu() {
+  const menu = document.getElementById('text-model-menu');
+  menu.classList.toggle('show');
+}
+function selectTextModel(e, model) {
+  e.stopPropagation();
+  document.getElementById('text-model-label').textContent = model;
+  document.querySelectorAll('#text-model-menu .model-option').forEach(o =>
+    o.classList.toggle('active', o.getAttribute('data-model') === model)
+  );
+  document.getElementById('text-model-menu').classList.remove('show');
+}
+
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('visual-model-menu');
+  if (menu && !e.target.closest('#visual-model-select')) menu.classList.remove('show');
+  const tmenu = document.getElementById('text-model-menu');
+  if (tmenu && !e.target.closest('#text-model-select')) tmenu.classList.remove('show');
+});
+
 // Init: check URL params for deep-link from homepage
 const urlParams = new URLSearchParams(window.location.search);
 const paramDomain = urlParams.get('domain');
 const paramTab = urlParams.get('tab');
+const paramModel = urlParams.get('model');
 if (paramDomain && domainConfig[paramDomain]) {
-  showDomain(paramDomain);
-  if (paramTab) {
+  showDomain(paramDomain, paramTab || undefined);
+  if (paramModel) {
     setTimeout(() => {
-      const tabEl = document.querySelector(`[data-tab="${paramTab}"]`);
-      if (tabEl) tabEl.click();
+      if (paramTab === 'text') {
+        selectTextModel({stopPropagation:()=>{}}, paramModel);
+      } else {
+        selectVisualModel({stopPropagation:()=>{}}, paramModel);
+      }
     }, 50);
   }
 } else {
   showDomain('home');
 }
 
-// Splash intro - exit after 2.5s
-setTimeout(() => {
-  const splash = document.getElementById('splash');
-  if (splash) {
-    splash.classList.add('exit');
-    setTimeout(() => splash.remove(), 800);
-  }
-}, 2500);
+// Splash intro removed - direct entry
 </script>
 </body>
 </html>
