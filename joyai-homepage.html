@@ -198,15 +198,14 @@ body.version-b .nav { background: transparent; backdrop-filter: none; border-bot
   z-index: 2;
 }
 .card.has-img .card-label {
-  bottom: 36px; left: 16px; right: 16px;
-  color: #fff;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
-  font-size: 16px;
+  display: none;
 }
 .card.has-img .card-sub {
   bottom: 16px; left: 16px; right: 16px;
-  color: rgba(255,255,255,0.75);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+  font-size: 14px;
+  font-weight: 600;
 }
 .card.has-img::after {
   content: '';
@@ -266,16 +265,33 @@ body.version-c .category-tabs { display: none; }
 /* Version switch */
 .version-switch {
   position: fixed; bottom: 24px; right: 24px; z-index: 200;
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 18px; border-radius: 24px;
-  background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8);
+  display: flex; align-items: center; gap: 0;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.15);
   font-size: 13px; font-weight: 500;
-  cursor: pointer; font-family: inherit;
+  font-family: inherit;
   backdrop-filter: blur(12px);
   box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  overflow: hidden;
+  padding: 3px;
+}
+.vs-btn {
+  padding: 7px 18px; border: none; background: transparent;
+  color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: inherit; border-radius: 20px;
   transition: all 0.2s;
 }
+.vs-btn:hover { color: rgba(255,255,255,0.9); }
+.vs-btn.active {
+  background: linear-gradient(135deg, #5AAEFF, #7ED8FF);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(90,174,255,0.3);
+}
+body.version-c .version-switch { background: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.5); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+body.version-c .vs-btn { color: rgba(0,0,0,0.35); }
+body.version-c .vs-btn:hover { color: rgba(0,0,0,0.7); }
+body.version-c .vs-btn.active { color: #fff; }
 .version-switch:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
 .version-switch .vs-dot { width: 8px; height: 8px; border-radius: 50%; background: #5AAEFF; }
 
@@ -298,7 +314,6 @@ body.version-c .category-tabs { display: none; }
 </nav>
 
 <section class="hero">
-  <div class="hero-badge">✦ JoyAI — 全栈 AI 能力平台</div>
   <h1>灵感<span class="accent">即刻实现</span><br>体验 · 交互 · 创作</h1>
   <p><span class="hero-typing" id="hero-typing"></span><span class="hero-cursor"></span></p>
   <div class="category-tabs" id="hero-tabs"></div>
@@ -306,45 +321,47 @@ body.version-c .category-tabs { display: none; }
 
 <div class="cards-container" id="cards-container"></div>
 
-<button class="version-switch" onclick="toggleVersion()">
-  <div class="vs-dot"></div>
-  <span id="vs-label">切换布局 B</span>
-</button>
+<div class="version-switch">
+  <button class="vs-btn active" onclick="switchVersion('a')">A</button>
+  <button class="vs-btn" onclick="switchVersion('b')">B</button>
+  <button class="vs-btn" onclick="switchVersion('c')">C</button>
+</div>
 
 <script>
 const categories = {
   newest: [
-    { label: 'JoyAI-VL-Interact', sub: '流式理解', tag: 'NEW' },
-    { label: 'JoyAI-Video-Edit', sub: '流式编辑', tag: 'NEW', route: { domain: 'visual', tab: 'visual-stream' } },
-    { label: 'Echo Studio', sub: '导演式分镜创作', tag: 'NEW' },
-    { label: 'World Model', sub: '开放世界生成', tag: 'NEW' },
-    { label: 'JoyAI-Sim', sub: '物理仿真引擎', tag: 'NEW' },
+    { label: 'JoyAI-VL-Interaction', key: 'JoyAI-VL-Interact', sub: '流式视频理解', tag: 'NEW' },
+    { label: 'JoyAI-Video-Edit', key: 'JoyAI-Video-Edit', sub: '流式视频编辑', tag: 'NEW', route: { domain: 'visual', tab: 'visual-stream' } },
+    { label: 'JoyAI-Echo-LongVideo', key: 'Echo Studio', sub: '长视频生成', tag: 'NEW' },
+    { label: 'JoyAI-Echo-WorldModel', key: 'World Model', sub: '世界模型', tag: 'NEW' },
+    { label: 'JoyAI-Sim', key: 'JoyAI-Sim', sub: '物理引擎仿真', tag: 'NEW' },
   ],
   dialog: [
-    { label: 'JoyAI-Flash', sub: '文字对话 / 创作 / 编程' },
-    { label: 'JoyAI-VL', sub: '图片 / 视频 / 文档理解', tag: 'NEW' },
-    { label: 'JoyAI-VL-Interact', sub: '流式理解', tag: 'NEW' },
+    { label: 'JoyAI-Flash', key: 'JoyAI-Flash', sub: '文字助手' },
+    { label: 'JoyAI-VL', key: 'JoyAI-VL', sub: '视觉理解' },
+    { label: 'JoyAI-VL-Interaction', key: 'JoyAI-VL-Interact', sub: '流式视频理解', tag: 'NEW' },
   ],
   visual: [
-    { label: 'JoyAI-Image', sub: '图像生成' },
-    { label: 'JoyAI-Image-Edit', sub: '图像编辑', tag: 'NEW' },
-    { label: 'JoyAI-Video', sub: '视频生成' },
-    { label: 'JoyAI-Video-Edit', sub: '视频编辑', tag: 'NEW' },
-    { label: 'Echo Studio', sub: '长视频生成', tag: 'NEW' },
-    { label: 'World Model', sub: '世界模型', tag: 'NEW' },
+    { label: 'JoyAI-Image', key: 'JoyAI-Image', sub: '图像生成' },
+    { label: 'JoyAI-Image-Edit', key: 'JoyAI-Image-Edit', sub: '图像编辑' },
+    { label: 'JoyAI-Video', key: 'JoyAI-Video', sub: '视频生成' },
+    { label: 'JoyAI-Video-Edit', key: 'JoyAI-Video-Edit', sub: '视频编辑', tag: 'NEW' },
+    { label: 'JoyAI-Echo-LongVideo', key: 'Echo Studio', sub: '长视频生成', tag: 'NEW' },
+    { label: 'JoyAI-Echo-WorldModel', key: 'World Model', sub: '世界模型', tag: 'NEW' },
   ],
   voice: [
-    { label: 'JoyAI-Talker', sub: '实时语音聊天' },
-    { label: 'JoyAI-Voice', sub: '音色创作 / 多角色配音' },
+    { label: 'JoyAI-Talker', key: 'JoyAI-Talker', sub: '语音聊天' },
+    { label: 'JoyAI-Voice', key: 'JoyAI-Voice', sub: '音色创作与配音' },
   ],
   sim: [
-    { label: 'JoyAI-Sim', sub: '物理仿真与数字孪生', tag: 'NEW' },
+    { label: 'JoyAI-Sim', key: 'JoyAI-Sim', sub: '物理引擎仿真', tag: 'NEW' },
   ],
   studio: [
-    { label: 'JoyAI-Video-Edit', sub: '流式编辑', tag: 'NEW', route: { domain: 'visual', tab: 'visual-stream' } },
-    { label: 'Echo Studio', sub: '导演式分镜视频创作', tag: 'NEW' },
-    { label: 'World Model', sub: '交互式开放世界', tag: 'NEW' },
-    { label: 'JoyAI-Sim', sub: '物理仿真引擎', tag: 'NEW' },
+    { label: 'JoyAI-VL-Interaction', key: 'JoyAI-VL-Interact', sub: '流式视频理解', tag: 'NEW' },
+    { label: 'JoyAI-Video-Edit', key: 'JoyAI-Video-Edit', sub: '流式视频编辑', tag: 'NEW', route: { domain: 'visual', tab: 'visual-stream' } },
+    { label: 'JoyAI-Echo-LongVideo', key: 'Echo Studio', sub: '长视频生成', tag: 'NEW' },
+    { label: 'JoyAI-Echo-WorldModel', key: 'World Model', sub: '世界模型', tag: 'NEW' },
+    { label: 'JoyAI-Sim', key: 'JoyAI-Sim', sub: '物理引擎仿真', tag: 'NEW' },
   ],
 };
 
@@ -452,7 +469,7 @@ function renderCards(cat) {
     card.style.opacity = '0';
     card.style.transform = `translateX(${t.x}px) translateY(80px) rotate(${t.rotate}deg) scale(0.8)`;
 
-    const imgSrc = (currentVersion === 'b' || currentVersion === 'c') ? cardImages[item.label] : null;
+    const imgSrc = (currentVersion === 'b' || currentVersion === 'c') ? cardImages[item.key] : null;
     let html = '';
     if (imgSrc) {
       card.classList.add('has-img');
@@ -541,6 +558,7 @@ function renderCards(cat) {
   container.onclick = (e) => {
     const rect = container.getBoundingClientRect();
     const mouseX = e.clientX - rect.left - rect.width / 2;
+    const mouseY = e.clientY - rect.top;
     const centerIndex = (count - 1) / 2;
 
     let closest = 0;
@@ -552,11 +570,13 @@ function renderCards(cat) {
       if (dist < closestDist) { closestDist = dist; closest = i; }
     }
 
+    if (closestDist > SPACING * 0.55) return;
+
     if (lockedIndex === closest) {
       // Already locked — navigate to v2 with the right domain+tab
       const items = categories[currentCat];
       const item = items[closest];
-      const route = item.route || cardRoutes[item.label];
+      const route = item.route || cardRoutes[item.key];
       if (route) {
         let url = 'joyai-ui-prototype-v2.html?domain=' + route.domain;
         if (route.tab) url += '&tab=' + route.tab;
@@ -599,22 +619,14 @@ function applyPositions(cards, count, focusIndex) {
 
 // Version toggle
 let currentVersion = 'a';
-function toggleVersion() {
-  if (currentVersion === 'a') {
-    currentVersion = 'b';
-    document.body.classList.remove('version-c');
-    document.body.classList.add('version-b');
-  } else if (currentVersion === 'b') {
-    currentVersion = 'c';
-    document.body.classList.remove('version-b');
-    document.body.classList.add('version-c');
-  } else {
-    currentVersion = 'a';
-    document.body.classList.remove('version-c');
-    document.body.classList.remove('version-b');
-  }
-  const labels = { a: '切换布局 B', b: '切换布局 C', c: '切换布局 A' };
-  document.getElementById('vs-label').textContent = labels[currentVersion];
+function switchVersion(v) {
+  currentVersion = v;
+  document.body.classList.remove('version-b', 'version-c');
+  if (v === 'b') document.body.classList.add('version-b');
+  if (v === 'c') document.body.classList.add('version-c');
+  document.querySelectorAll('.vs-btn').forEach(btn =>
+    btn.classList.toggle('active', btn.textContent === v.toUpperCase())
+  );
   const navTabs = document.getElementById('nav-tabs-slot');
   navTabs.innerHTML = buildTabs();
   requestAnimationFrame(() => updateIndicator(navTabs));
