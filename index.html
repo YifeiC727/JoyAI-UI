@@ -586,11 +586,15 @@ body {
   </div>
 
   <div class="sidebar-nav">
-    <div class="nav-section-label">AI 模型</div>
+    <div class="nav-section-label">对话助手</div>
     <div class="nav-item" data-domain="text" onclick="showDomain('text')">文字助手<span class="nav-indicator"></span></div>
-    <div class="nav-item" data-domain="vision" onclick="showDomain('vision')">视觉理解<span class="nav-indicator"></span></div>
+    <div class="nav-item" data-domain="vision" onclick="showDomain('vision')">流式理解<span class="nav-indicator"></span></div>
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">视觉创作</div>
     <div class="nav-item" data-domain="image" onclick="showDomain('image')">图片创作<span class="nav-indicator"></span></div>
     <div class="nav-item" data-domain="video" onclick="showDomain('video')">视频创作<span class="nav-indicator"></span></div>
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">语音交互</div>
     <div class="nav-item" data-domain="voice" onclick="showDomain('voice')">语音能力<span class="nav-indicator"></span></div>
     <div class="nav-divider"></div>
     <div class="nav-section-label">创作工作台</div>
@@ -1116,7 +1120,7 @@ function loadRecent(domain, convId) {
 const domainConfig = {
   home:   { title: 'JoyAI 能力平台', tabs: [], page: 'home', hasNewChat: false },
   text:   { title: '文字助手', tabs: [], page: 'text', hasNewChat: true },
-  vision: { title: '视觉理解', tabs: [{id:'vision-image',label:'图片理解'},{id:'vision-video',label:'视频理解'},{id:'vision-doc',label:'文档理解'},{id:'vision-live',label:'实时视觉'}], page: 'vision-image', hasNewChat: true },
+  vision: { title: '流式理解', tabs: [{id:'vision-image',label:'图片理解'},{id:'vision-video',label:'视频理解'},{id:'vision-doc',label:'文档理解'},{id:'vision-live',label:'实时视觉'}], page: 'vision-image', hasNewChat: true },
   image:  { title: '图片创作', tabs: [{id:'image-gen',label:'图片生成'},{id:'image-edit',label:'图片编辑'}], page: 'image-gen', hasNewChat: true },
   video:  { title: '视频创作', tabs: [{id:'video-gen',label:'视频生成'},{id:'video-edit',label:'视频编辑'}], page: 'video-gen', hasNewChat: true },
   voice:  { title: '语音能力', tabs: [{id:'voice-talker',label:'语音聊天'},{id:'voice-clone',label:'音色创作'},{id:'voice-dub',label:'AI 配音'}], page: 'voice-talker', hasNewChat: false },
@@ -1224,7 +1228,21 @@ function homeSubmit() {
   }
 }
 
-showDomain('home');
+// Init: check URL params for deep-link from homepage
+const urlParams = new URLSearchParams(window.location.search);
+const paramDomain = urlParams.get('domain');
+const paramTab = urlParams.get('tab');
+if (paramDomain && domainConfig[paramDomain]) {
+  showDomain(paramDomain);
+  if (paramTab) {
+    setTimeout(() => {
+      const tabEl = document.querySelector(`[data-tab="${paramTab}"]`);
+      if (tabEl) tabEl.click();
+    }, 50);
+  }
+} else {
+  showDomain('home');
+}
 
 // Splash intro - exit after 2.5s
 setTimeout(() => {
